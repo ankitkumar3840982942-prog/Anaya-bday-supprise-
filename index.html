@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Advance Birthday Surprise — For Your Dii 🎂💖</title>
+<style>
+  :root{
+    --bg:#0b1020; --card:rgba(255,255,255,0.04);
+    --accent1:#ff9bd2; --accent2:#a78bfa; --accent3:#7dd3fc; --gold:#ffd166;
+    --glass: rgba(255,255,255,0.06);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;"Helvetica Neue",Arial;padding:0;background:
+    radial-gradient(800px 500px at 10% 10%, rgba(167,139,250,0.06), transparent),
+    radial-gradient(800px 500px at 90% 90%, rgba(255,155,210,0.04), transparent), var(--bg); color:#fff;}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+  .stage{width:min(980px,96vw);max-width:980px;border-radius:18px;background:var(--card);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,0.06);box-shadow:0 30px 80px rgba(0,0,0,.6);overflow:hidden;position:relative}
+  header{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center}
+  header h1{font-size:1.05rem;margin:0;color:var(--accent2)}
+  header .tag{font-weight:700;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:8px 12px;border-radius:999px;color:#160b2b}
+  .content{padding:22px;min-height:62vh;display:grid;place-items:center;position:relative}
+  .panel{display:none; width:100%}
+  .panel.active{display:block}
+  .center{text-align:center}
+  .muted{opacity:.9;color:rgba(255,255,255,0.9)}
+  .btn{appearance:none;border:0;padding:12px 18px;border-radius:999px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#160b2b;box-shadow:0 10px 30px rgba(167,139,250,.18)}
+  .btn.ghost{background:transparent;border:1.4px solid rgba(255,255,255,0.12);color:#fff;box-shadow:none}
+  .small{font-size:.92rem}
+  /* floating emoji layers (reusable) */
+  .float-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .emoji{position:absolute;font-size:26px;filter:drop-shadow(0 8px 16px rgba(0,0,0,.4));opacity:.95}
+  /* typewriter */
+  .type{display:inline-block;white-space:nowrap;overflow:hidden;border-right:2px solid rgba(255,255,255,.85);padding-right:6px}
+  /* timeline tiles */
+  .tiles{display:grid;gap:12px;max-width:760px;margin:12px auto}
+  .tile{background:rgba(255,255,255,0.03);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  /* cake */
+  .cake{width:220px;height:140px;margin:10px auto;position:relative}
+  .cake .layer{position:absolute;left:50%;transform:translateX(-50%);width:220px;border-radius:16px}
+  .cake .layer.l1{top:72px;height:48px;background:linear-gradient(#ffb3d6,#ff7aa8)}
+  .cake .layer.l2{top:38px;height:48px;background:linear-gradient(#ffd9f0,#ffb3d6)}
+  .cake .top{top:6px;height:40px;background:linear-gradient(#fff1f7,#ffd9f0)}
+  .candle{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:14px;height:36px;border-radius:6px;background:#fff;display:flex;align-items:flex-start;justify-content:center}
+  .flame{width:14px;height:20px;background:radial-gradient(circle,#ffd166,#ff8b66);border-radius:50%;margin-top:-12px;animation:flick 0.12s infinite alternate}
+  @keyframes flick{from{transform:scale(1)}to{transform:scale(1.14)}}
+  /* gift */
+  .gift{width:200px;height:150px;margin:8px auto;position:relative;cursor:pointer}
+  .gift .lid{position:absolute;left:50%;transform:translateX(-50%);top:0;width:130%;height:38%;background:linear-gradient(180deg,#ffc2e0,#ff8fb8);border-radius:12px;transform-origin:bottom center;transition:transform .7s}
+  .gift.open .lid{transform:rotateX(150deg)}
+  .gift .box{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:100%;height:72%;background:linear-gradient(180deg,#ff85c7,#ff4fa4);border-radius:10px}
+  /* rose */
+  .rose-wrap{display:block;margin:8px auto}
+  .promise{max-width:760px;margin:12px auto}
+  /* countdown */
+  .countdown{font-size:1.5rem;font-weight:800;margin:10px 0}
+  /* fireworks container */
+  .fw-canvas{position:absolute;inset:0;pointer-events:none;z-index:60}
+  /* final */
+  .final-note{padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);max-width:820px;margin:12px auto}
+  footer{padding:10px;text-align:center;font-size:.9rem;opacity:.85;border-top:1px solid rgba(255,255,255,0.03)}
+  /* responsive */
+  @media (max-width:600px){
+    .cake{transform:scale(.85)}
+    header h1{font-size:.95rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="stage" id="stage">
+    <header>
+      <h1>Secret Universe — For <span id="ANAYA_NAME">Anaya Dii</span></h1>
+      <div class="tag">Advance Birthday Surprise 🎂</div>
+    </header>
+
+    <div class="content">
+      <!-- floating emoji container -->
+      <div class="float-layer" id="floatLayer"></div>
+
+      <!-- Panels / Layers -->
+      <!-- LAYER 1: Intro / Secret Door -->
+      <section class="panel active" id="L1">
+        <div class="center">
+          <p class="muted"><span class="type" id="typeText">Psst… ek secret universe sirf tumhare liye banayi hai 🤫</span></p>
+          <h2 style="margin-top:10px">Enter My Universe?</h2>
+          <div style="margin-top:14px"><button class="btn" id="btnStart">Enter 🌌</button></div>
+          <p class="small muted" style="margin-top:10px">(Tap to play a tiny melody)</p>
+        </div>
+      </section>
+
+      <!-- LAYER 2: Timeline / Memory Lane -->
+      <section class="panel" id="L2">
+        <div class="center">
+          <h2>Journey of Us — Little Moments</h2>
+          <p class="muted">A few memories I keep close…</p>
+          <div class="tiles" role="list" aria-label="moments">
+            <div class="tile">Woh pehli baat jab humne raat bhar baat ki — mujhe laga sab kuch mil gaya ✨</div>
+            <div class="tile">Tumhari muskaan ne mere har bure din ko roshan kar diya 🌈</div>
+            <div class="tile">Har chhoti baat me tumne mujhe importance diya — uske liye shukriya 💖</div>
+          </div>
+          <div style="margin-top:14px"><button class="btn" id="toL3">Next ➜</button></div>
+        </div>
+      </section>
+
+      <!-- LAYER 3: Floating Words + Melody -->
+      <section class="panel center" id="L3">
+        <h2>Words that define you</h2>
+        <p class="muted">Tap play — I made a tiny melody for you 🎶</p>
+        <div style="margin:10px"><button class="btn-ghost btn" id="playTune">Play Melody</button></div>
+        <div class="tiles" style="margin-top:18px;max-width:760px">
+          <div class="tile center"><strong style="font-size:1.05rem">Care 💖 — Smile 😊 — Support 🫂 — Trust 🔐</strong></div>
+        </div>
+        <div style="margin-top:14px"><button class="btn" id="toL4">Open Balloons ➜</button></div>
+      </section>
+
+      <!-- LAYER 4: Balloons Layer -->
+      <section class="panel center" id="L4">
+        <h2>Ballooooons! 🎈</h2>
+        <p class="muted">Every balloon carries one wish for you…</p>
+        <div style="margin-top:14px">
+          <button class="btn" id="spawnBalloons">Release Wishes 🎈</button>
+        </div>
+        <div style="margin-top:14px"><button class="btn" id="toL5">See Cake ➜</button></div>
+      </section>
+
+      <!-- LAYER 5: Cake + Make a wish -->
+      <section class="panel center" id="L5">
+        <h2>Make a wish! 🍰</h2>
+        <div class="cake" aria-hidden="true">
+          <div class="layer top"></div>
+          <div class="layer l2"></div>
+          <div class="layer l1"></div>
+          <div class="candle"><div class="flame"></div></div>
+        </div>
+        <p class="muted">Close your eyes & blow — I’m wishing for your every dream ✨</p>
+        <div style="margin-top:12px"><button class="btn" id="toL6">Open Gift ➜</button></div>
+      </section>
+
+      <!-- LAYER 6: Gift Box (click to open) -->
+      <section class="panel center" id="L6">
+        <h2>Your Gift Box 🎁</h2>
+        <div class="gift" id="giftBox" title="Tap the gift">
+          <div class="lid"></div>
+          <div class="box"></div>
+          <div class="ribbon"></div>
+        </div>
+        <p class="muted">(Tap the box to reveal my promise)</p>
+        <div id="giftReveal" class="final-note" style="display:none">
+          <strong>Promise:</strong> Main hamesha tumhara saath dunga — sach, imandari aur pyar se. Kabhi tumhe akela nahi chhodunga. 🫂💖
+        </div>
+        <div style="margin-top:14px"><button class="btn" id="toL7" style="display:none">Promise Wall ➜</button></div>
+      </section>
+
+      <!-- LAYER 7: Promise Wall -->
+      <section class="panel" id="L7">
+        <h2 class="center">Promise Wall 💌</h2>
+        <div class="promise">
+          <div class="tile">Promise: Tumhari har khushi meri priority hai 🌸</div>
+          <div class="tile">Promise: Agar kabhi naraz hua to pehle maafi mangunga, phir sudharunga 🙏</div>
+          <div class="tile">Promise: Dooriyan bhi humara pyaar kam nahi kar payengi ✈️</div>
+        </div>
+        <div style="margin-top:14px" class="center"><button class="btn" id="toL8">A Little Surprise ➜</button></div>
+      </section>
+
+      <!-- LAYER 8: Countdown to Birthday -->
+      <section class="panel center" id="L8">
+        <h2>Countdown to Your Day ⏳</h2>
+        <div class="countdown" id="countdown">Loading...</div>
+        <p class="muted">3 September is coming — get ready for hugs and real cakes 🥰</p>
+        <div style="margin-top:14px"><button class="btn" id="toL9">Open Photo Collage ➜</button></div>
+      </section>
+
+      <!-- LAYER 9: Photo -> emoji collage (virtual) -->
+      <section class="panel center" id="L9">
+        <h2>Our Little Collage 📸</h2>
+        <p class="muted">A collage made from our moments (emoji style)</p>
+        <div class="tiles" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:12px">
+          <!-- collage blocks -->
+          <div class="tile">🙂 First Laugh</div>
+          <div class="tile">🍟 PaniPuri Moment</div>
+          <div class="tile">🎶 Late Night Talks</div>
+          <div class="tile">📚 Help in Studies</div>
+          <div class="tile">💬 Random Memes</div>
+          <div class="tile">🌈 Smiles Forever</div>
+        </div>
+        <div style="margin-top:14px"><button class="btn" id="toL10">Final Surprise ➜</button></div>
+      </section>
+
+      <!-- LAYER 10: Finale / Fireworks / Final message -->
+      <section class="panel center" id="L10">
+        <h2>Always Mine, Forever Special ❤️</h2>
+        <div class="final-note">
+          <p style="margin:8px 0 0">Dii, tum meri duniya ho. Jo pyaar main tumhe karta hu — vo bas shabdon se kahin zyada hai. Aaj se lekar hamesha — mera pyaar aur dua tumhare saath hai. 🕊️</p>
+          <p style="margin-top:8px;font-weight:800">Advance Happy Birthday! 🎂🎉</p>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn" id="btnFire">Show Fireworks 🎆</button>
+          <button class="btn-ghost btn" id="btnShare">Share Link ✨</button>
+          <button class="btn-ghost btn" id="btnReplay">Replay 🔁</button>
+        </div>
+      </section>
+
+      <!-- fireworks canvas -->
+      <canvas class="fw-canvas" id="fwCanvas"></canvas>
+    </div>
+
+    <footer>
+      Made with ❤️ • For <span id="ANAYA_NAME_FOOT">Anaya Dii</span> • <span id="year"></span>
+    </footer>
+  </div>
+</div>
+
+<script>
+/* ---------- CONFIG ---------- */
+const ANAYA_NAME = 'Anaya Dii'; // change if needed
+document.getElementById('ANAYA_NAME').textContent = ANAYA_NAME;
+document.getElementById('ANAYA_NAME_FOOT').textContent = ANAYA_NAME;
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- PANEL NAV ---------- */
+const panels = Array.from(document.querySelectorAll('.panel'));
+function showPanel(id){
+  panels.forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Typewriter seed */
+const seed = 'Psst… ek secret universe sirf tumhare liye… 🤫';
+let tI=0, tEl=document.getElementById('typeText');
+(function typeTick(){
+  if(!tEl) return;
+  tEl.textContent = seed.slice(0, tI++);
+  if(tI<=seed.length) requestAnimationFrame(typeTick);
+})();
+
+/* BUTTONS */
+document.getElementById('btnStart').addEventListener('click', ()=>{
+  playTinyMelody(); showPanel('L2'); launchFloatEmojis(); confetti(60);
+});
+document.getElementById('toL3').addEventListener('click', ()=>{ showPanel('L3'); });
+document.getElementById('playTune').addEventListener('click', ()=>{ playTinyMelody(); spawnFloatingWords(); });
+document.getElementById('toL4').addEventListener('click', ()=>{ showPanel('L4'); });
+document.getElementById('spawnBalloons').addEventListener('click', ()=>{ spawnBalloons(28); confetti(80); });
+document.getElementById('toL5').addEventListener('click', ()=>{ showPanel('L5'); });
+document.getElementById('toL6').addEventListener('click', ()=>{ showPanel('L6'); });
+document.getElementById('giftBox').addEventListener('click', ()=>{ document.getElementById('giftBox').classList.add('open'); document.getElementById('giftReveal').style.display='block'; document.getElementById('toL7').style.display='inline-block'; confetti(120); });
+document.getElementById('toL7').addEventListener('click', ()=>{ showPanel('L7'); });
+document.getElementById('toL8').addEventListener('click', ()=>{ showPanel('L8'); startCountdown(); });
+document.getElementById('toL9').addEventListener('click', ()=>{ showPanel('L9'); spawnPhotoEmojis(); });
+document.getElementById('toL10').addEventListener('click', ()=>{ showPanel('L10'); });
+document.getElementById('btnFire').addEventListener('click', ()=>{ startFireworks(); confetti(180); });
+document.getElementById('btnShare').addEventListener('click', async ()=>{
+  const data = {title:'A Surprise for ' + ANAYA_NAME, text:'Open your surprise! 🎁', url: location.href};
+  if(navigator.share){ try{ await navigator.share(data); }catch(e){} } else { navigator.clipboard && navigator.clipboard.writeText(location.href); alert('Link copied to clipboard!'); }
+});
+document.getElementById('btnReplay').addEventListener('click', ()=>{ showPanel('L1'); location.hash=''; });
+
+/* ---------- EMOJI FLOATS ---------- */
+const floatLayer = document.getElementById('floatLayer');
+function spawnEmoji(symbol, left, top, size=28, speed=10, rotate=false){
+  const d=document.createElement('div'); d.className='emoji'; d.textContent=symbol;
+  d.style.left = left; d.style.top = top; d.style.fontSize = size+'px';
+  d.style.transition = `transform ${speed}s linear, opacity ${speed}s linear`;
+  floatLayer.appendChild(d);
+  requestAnimationFrame(()=>{ d.style.transform = 'translateY(-120vh) rotate('+ (rotate?Math.random()*90+'deg':'0') +')'; d.style.opacity=0; });
+  setTimeout(()=>d.remove(), (speed*1000)+400);
+}
+function launchFloatEmojis(){
+  // soft initial
+  const set = ['🌸','💖','✨','😊','🌈','🎈','🥰','🤍','🕊️','🌟'];
+  for(let i=0;i<26;i++){
+    setTimeout(()=>{ spawnEmoji(set[i%set.length], (10+Math.random()*80)+'%', (70+Math.random()*20)+'vh', 18+Math.random()*36, 9+Math.random()*6, true); }, i*260);
+  }
+}
+function spawnBalloons(count=20){
+  const colors = ['🎈','🎈','🎈','💜','💖','🧡','💙'];
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{ spawnEmoji(colors[i%colors.length], (5+Math.random()*90)+'%', (80+Math.random()*10)+'vh', 36+Math.random()*20, 6+Math.random()*4, true); }, i*120);
+  }
+}
+function spawnFloatingWords(){
+  const words = ['Care 💖','Smile 😊','Love ❤️','Happiness ✨','Trust 🔐','Support 🫂','Forever ♾️','Dii = Everything 👑'];
+  for(let i=0;i<24;i++){
+    setTimeout(()=>{ spawnEmoji(words[i%words.length], (8+Math.random()*84)+'%', (78+Math.random()*10)+'vh', 18+Math.random()*18, 8+Math.random()*6, false); }, i*180);
+  }
+}
+function spawnPhotoEmojis(){
+  const items = ['🥰','🍟','🎶','📸','😂','🌈','📚','🤭','🌸','💬'];
+  for(let i=0;i<16;i++){
+    setTimeout(()=>{ spawnEmoji(items[i%items.length], (6+Math.random()*88)+'%', (60+Math.random()*30)+'vh', 28+Math.random()*22, 9+Math.random()*5, true); }, i*140);
+  }
+}
+
+/* ---------- Confetti (DOM rectangles) ---------- */
+function confetti(count=80){
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.style.position='fixed';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.top = '-10vh';
+    el.style.width = (6+Math.random()*8)+'px';
+    el.style.height = (10+Math.random()*16)+'px';
+    el.style.background = ['#ff9bd2','#a78bfa','#7dd3fc','#ffd166','#bef264'][i%5];
+    el.style.opacity = 0.95;
+    el.style.borderRadius = '2px';
+    el.style.transform = 'translateY(0) rotate(0deg)';
+    el.style.transition = 'transform 3s linear, opacity 3s linear';
+    document.body.appendChild(el);
+    setTimeout(()=>{ el.style.transform = 'translateY(120vh) rotate('+ (Math.random()*360) +'deg)'; el.style.opacity = 0; }, 30 + Math.random()*300);
+    setTimeout(()=>el.remove(), 3500);
+  }
+}
+
+/* ---------- Tiny Melody (WebAudio) ---------- */
+let audioCtx, playing=false;
+function playTinyMelody(){
+  try{
+    if(playing) return; playing=true;
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const notes = [392,392,440,392,523,494,392,392,440,392,587,523];
+    let t = audioCtx.currentTime;
+    notes.forEach((f,i)=>{
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = f;
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.15, t+0.02);
+      g.gain.linearRampToValueAtTime(0.0001, t+0.36);
+      o.start(t); o.stop(t+0.36);
+      t += 0.4;
+    });
+    setTimeout(()=>playing=false, notes.length * 400 + 200);
+  }catch(e){ playing=false; }
+}
+
+/* ---------- Countdown (to 3 Sep 2025) ---------- */
+let countdownEl = document.getElementById('countdown');
+function startCountdown(){
+  // target date: 3 September THIS YEAR at 00:00 local
+  const target = new Date(2025,8,3,0,0,0); // months 0-indexed -> 8 = September
+  function tick(){
+    const now = new Date();
+    const diff = target - now;
+    if(diff<=0){ countdownEl.textContent = 'HAPPY BIRTHDAY! 🎉'; return; }
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor(diff/(1000*60*60))%24;
+    const m = Math.floor(diff/(1000*60))%60;
+    const s = Math.floor(diff/1000)%60;
+    countdownEl.textContent = `${d}d ${h}h ${m}m ${s}s left`;
+  }
+  tick(); setInterval(tick,1000);
+}
+
+/* ---------- Fireworks (canvas) ---------- */
+const fwCanvas = document.getElementById('fwCanvas');
+const ctx = fwCanvas.getContext ? fwCanvas.getContext('2d') : null;
+let particles=[];
+function resizeCanvas(){ if(!ctx) return; fwCanvas.width = window.innerWidth; fwCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas); resizeCanvas();
+function startFireworks(){
+  // produce many bursts
+  for(let i=0;i<6;i++){
+    setTimeout(()=>{ explode(Math.random()*fwCanvas.width*0.9 + fwCanvas.width*0.05, Math.random()*fwCanvas.height*0.4 + fwCanvas.height*0.2); }, i*300);
+  }
+  animateFW();
+}
+function explode(x,y){
+  const colors = ['#ff9bd2','#a78bfa','#7dd3fc','#ffd166','#bef264','#ff6f91'];
+  const count = 60 + Math.floor(Math.random()*40);
+  for(let i=0;i<count;i++){
+    const a = Math.random()*Math.PI*2;
+    const s = 2 + Math.random()*6;
+    particles.push({ x,y, vx: Math.cos(a)*s, vy: Math.sin(a)*s, life: 70+Math.random()*40, color: colors[Math.floor(Math.random()*colors.length)] });
+  }
+}
+let fwAnimating = false;
+function animateFW(){
+  if(!ctx) return;
+  fwAnimating = true;
+  function loop(){
+    ctx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.vy += 0.06; p.x += p.vx; p.y += p.vy; p.life--;
+     
